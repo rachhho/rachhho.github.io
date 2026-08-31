@@ -1,0 +1,27 @@
+@font-face {
+    font-family: "Puppies_Play";
+    src: url("fonts/PuppiesPlay-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #ffd9e8;
+    font-family: sans-serif;
+    color: #2b2b2b;
+  }
+
+  h1 {
+    font-family: "Puppies_Play", cursive, sans-serif;
+    font-size: 3rem;
+    color: #4a2c6d;
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+
+  .center {
+    display: flex;
+    justify-content: center;
+  }
