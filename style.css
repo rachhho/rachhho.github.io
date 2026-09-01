@@ -69,16 +69,31 @@ h2 {
     border-radius: 15px;
   }
   
- .return {
+.return {
     margin-top: 20px;
     margin-bottom: 20px;
  } 
 
- .welcome {
+.welcome {
     display: flex;
     justify-content: center;
  }
 
- .welcome_child {
+.welcome_child {
     width: 700px;
  }
+
+@page {
+  margin: 0.5in;
+}
+
+@media print {
+  .image {
+      width: 100%;
+      max-width: 300px;
+      height: auto;
+  }
+  .center {
+      align-items: flex-start;  /* stop flex from stretching image height */
+  }
+}
