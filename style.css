@@ -13,15 +13,70 @@ body {
     color: #2b2b2b;
   }
 
-  h1 {
+h1 {
     font-family: "Puppies_Play", cursive, sans-serif;
     font-size: 3rem;
-    color: #4a2c6d;
+    color: #000000;
     text-align: center;
     margin-top: 1.5rem;
   }
 
-  .center {
+h2 {
+    font-family: "Puppies_Play", cursive, sans-serif;
+    font-size: 2rem;
+  }
+
+.text {
+    width: 80%;
+    margin-left: 10%;
+}
+.title {
+    display: flex;
+    justify-content: center;
+}
+
+.title_text{
+    width: 40%;
+}
+.link {
+    width: 30%;
+    transition: width 0.2s ease;
+  }
+.link:hover {
+    width: 35%;
+}
+.center {
     display: flex;
     justify-content: center;
   }
+
+.image {
+    width:25%;
+    margin-top: 2%;
+    margin-bottom: 2%;
+  }
+
+.project {
+    border-width: 2px;
+    border-color: #4a2c6d;
+    margin-left: 4%;
+    margin-right: 4%;
+    margin-bottom: 2%;
+    background-color: aliceblue;
+    padding: 2%;
+    border-radius: 15px;
+  }
+  
+ .return {
+    margin-top: 20px;
+    margin-bottom: 20px;
+ } 
+
+ .welcome {
+    display: flex;
+    justify-content: center;
+ }
+
+ .welcome_child {
+    width: 50%;
+ }
