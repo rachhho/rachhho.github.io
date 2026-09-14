@@ -119,12 +119,15 @@ figure.image-figure figcaption {
 }
 
 @media print {
-  .image {
-      width: 100%;
-      max-width: 300px;
-      height: auto;
-  }
   .center {
-      align-items: flex-start;  /* stop flex from stretching image height */
+      flex-wrap: wrap;
+      align-items: flex-start;
+  }
+
+  .image,
+  .image_large {
+      width: 100%;
+      max-width: 200px;
+      height: auto;
   }
 }
