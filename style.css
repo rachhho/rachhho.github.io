@@ -25,29 +25,42 @@ h2 {
     font-family: "Puppies_Play", cursive, sans-serif;
     font-size: 2rem;
   }
-
-.text {
-    width: 700px;
-    margin-left: 100px;
+.section {
+  display: flex;
+  justify-content: center;
 }
+.text {
+    width: 75%;
+    max-width: 1000px;
+    margin: 0 auto;
+    
+}
+
+.diagram-image {
+  height: 100px;
+  width: auto;
+}
+
 .title {
     display: flex;
     justify-content: center;
 }
 
 .title_text{
-    width: 550px;
+    height: 175px;
+    margin-top: 25px;
 }
 .link {
-    width: 200px;
+    height: 100px;
     transition: width 0.2s ease;
   }
 .link:hover {
-    width: 250px;
+    height: 120px;
 }
 .center {
     display: flex;
     justify-content: center;
+    text-align: center;
   }
 
 .image {
@@ -57,7 +70,13 @@ h2 {
     margin-top: 20px;
     margin-bottom: 20px;
   }
-
+.image_large {
+    width: 500px;
+    height: auto;
+    object-fit: contain;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
 .project {
     border-width: 2px;
     border-color: #4a2c6d;
@@ -74,6 +93,18 @@ h2 {
     margin-bottom: 20px;
  } 
 
+figure.image-figure {
+    margin: 0 10px 10px 10px;
+    text-align: center;
+}
+ 
+figure.image-figure figcaption {
+    font-size: 0.85rem;
+    margin-top: 6px;
+    color: #4a2c6d;
+}
+
+/* welcom banner */
 .welcome {
     display: flex;
     justify-content: center;
