@@ -68,10 +68,37 @@
         <img src="../images/multi-scale-image-pyr.png" class="diagram-image">
     </div>
     <div class="text">
-        <p>Searching over a single fixed window becomes prohibitively expensive as images get larger. For an image like melons.tif, finding the optimal offset could require searching over a window of 200+ pixels in each direction.</p>
-        <p>Therefore, I looked into using image pyramids. Image pyramids solve searching through hundreds of shifts for large images by rescaling the image down to a small base size (I used a cutoff of 500 pixels along the shorter dimension) and searching there first. Because the image has been scaled down so much, a wide window suddenly takes much less time since each pixel in the small image pyramid essentially represents a larger group of pixels in the original image.</p>
-        <p>I implemented this recursively: at each level, the function calls itself on a half-resolution version of the image, recurses all the way down to the base case, and then performs the same -15 to 15 window search used in the single-pixel approach to get the starting point.</p>
-        <p>Once that base-case search finds its best match, the recursion unwinds back up through the pyramid. At each level going back up, the image is scaled back up by a factor of 2 (matching the 0.5x downscaling done by sk.transform.rescale), and the shift found at the level below is scaled by that same factor of 2. This is because for every one pixel of shift in the reduced image, it is equivalent to 2 pixels in the following image pyramid, and so on.</p>
+        <p>Searching over a single fixed window becomes prohibitively expensive as 
+            images get larger. For an image like melons.tif, finding the optimal 
+            offset could require searching over a window of 200+ pixels in each 
+            direction.</p>
+        <p>Therefore, I looked into using image pyramids. Image pyramids solve 
+            searching through hundreds of shifts for large images by rescaling 
+            the image down to a small base size (I used a cutoff of 500 pixels 
+            along the shorter dimension) and searching there first. Because the 
+            image has been scaled down so much, a wide window suddenly takes much 
+            less time since each pixel in the small image pyramid essentially 
+            epresents a larger group of pixels in the original image.</p>
+        <p>I implemented this recursively: at each level, the function calls itself
+             on a half-resolution version of the image, recurses all the way down to
+              the base case, and then performs the same -15 to 15 window search used
+               in the single-pixel approach to get the starting point.</p>
+        <p>Once that base-case search finds its best match, the recursion 
+            unwinds back up through the pyramid. At each level going back up, 
+            the image is scaled back up by a factor of 2 (matching the 0.5x 
+            downscaling done by sk.transform.rescale), and the shift found at the
+             level below is scaled by that same factor of 2. This is because for 
+             every one pixel of shift in the reduced image, it is equivalent to 2 
+             pixels in the following image pyramid, and so on.</p>
+        <p>skimage.transform.rescale applies a Gaussian blur before downsampling 
+            (via its built-in anti_aliasing option) because shrinking an image without 
+            first removing its fine, high-frequency detail can cause aliasing. 
+            Aliasing is where content that's too fine to be represented at the 
+            lower resolution gets misrepresented. This would impact how the image 
+            pyramids get compared, so getting rid of aliasing is important. The 
+            Gaussian blur acts as a low-pass filter, reducing the high-frequency 
+            components before rescaling so that only detail coarse enough to not be
+            aliased in the reduced sampling rate remains, preventing misrepresentation.</p>
         <p>This new shift then serves as the starting point for the next search, since we’ve narrowed the window of area that we had to search through by using the smaller image pyramid to compare similarities. This means each level only has to search a small window around the estimate, as opposed to starting from scratch.
             For most of the .tif images in this set, the recursion went four levels deep. That means the total work done is roughly four rounds of a 15×15 window search, instead of one enormous 400×400 window search at full resolution, which is a significant reduction in the number of shifted images compared to each other.</p>
             <p>I tested both NCC and L2 in the multi-scale pyramid search, since the pyramid only changes what gets searched (a small window at each resolution level, refined and scaled up level by level) rather than how each candidate is scored. At every level of the pyramid — from the coarsest base case up to full resolution — I used the same L2/NCC scoring functions to evaluate each candidate offset within that level's local search window, and combined that level's winning offset with the scaled-up estimate carried from the level below. This meant the pyramid version got the same robustness benefits from NCC as the single-pixel version, while also being far faster, since the wide search only ever happened once at the smallest, coarsest image rather than at full resolution.</p>
