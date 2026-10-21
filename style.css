@@ -117,6 +117,56 @@ figure.stack-cell figcaption {
     
 }
 
+.text p {
+    line-height: 1.55;
+    margin: 0.85rem 0;
+}
+
+.gallery {
+    width: 92%;
+    max-width: 1180px;
+    margin: 0.75rem auto 2rem auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1.25rem 1.25rem;
+}
+
+.image_wide {
+    width: min(92vw, 980px);
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin: 8px auto;
+}
+
+.image_mid {
+    width: min(46vw, 480px);
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin: 8px auto;
+}
+
+.image_compact {
+    width: min(18vw, 190px);
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin: 8px auto;
+}
+
+.image_tall_strip {
+    width: auto;
+    max-width: min(70vw, 420px);
+    max-height: 80vh;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin: 8px auto;
+}
+
 .diagram-image {
   height: 100px;
   width: auto;
