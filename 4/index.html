@@ -8,11 +8,11 @@
 </head>
 <body>
     <div class="title">
-        <img src="../images/8_transparent_images/proj_3.png" class="title_text">
+        <img src="../images/8_transparent_images/proj_3.png" class="title_text crop-left-line">
     </div>
  
     <div class="title">
-        <img src="../images/8_transparent_images/part_a.png" class="title_text_2">
+        <img src="../images/8_transparent_images/part_a.png" class="title_text_2 crop-left-line">
     </div>
     <div class="text">
         <p>Part A uses a pretrained text-conditioned flow-matching model, so there is no training here; the work is in building the inputs, sampling, and conditioning. The model is trained on straight-line paths between Gaussian noise and a clean image. For a clean image \(x_1\), a noise sample \(\epsilon \sim \mathcal{N}(0, I)\), and a time \(t \in [0, 1]\), the noisy input is</p>
@@ -24,7 +24,7 @@
     </div>
  
     <div class="title">
-        <img src="../images/8_transparent_images/part_a_1.png" class="title_text_2">
+        <img src="../images/8_transparent_images/part_a_1.png" class="title_text_2 crop-left-line">
     </div>
     <div class="text">
         <p><strong>1.1 Constructing Noisy Training Inputs.</strong> My <code>interpolate(image, noise, t)</code> function implements the equation above:</p>
@@ -155,7 +155,7 @@
     </div>
  
     <div class="title">
-        <img src="../images/8_transparent_images/part_a_2.png" class="title_text_2">
+        <img src="../images/8_transparent_images/part_a_2.png" class="title_text_2 crop-left-line">
     </div>
     <div class="text">
         <p>This section improves how closely the samples follow the prompt using classifier-free guidance.</p>
@@ -286,14 +286,14 @@
     </div>
  
     <div class="title">
-        <img src="../images/8_transparent_images/part_b.png" class="title_text_2">
+        <img src="../images/8_transparent_images/part_b.png" class="title_text_2 crop-left-line">
     </div>
     <div class="text">
         <p><strong>Part B.</strong> In Part B I train my own models on MNIST. First I train a UNet to denoise in a single step and look at where that approach breaks down. Then I train a UNet to predict the flow in flow matching, which lets me generate digits by iterating, and finally I add class conditioning.</p>
     </div>
  
     <div class="title">
-        <img src="../images/8_transparent_images/part_b_1.png" class="title_text_2">
+        <img src="../images/8_transparent_images/part_b_1.png" class="title_text_2 crop-left-line">
     </div>
     <div class="text">
         <p><strong>1.1 Implementing the UNet.</strong> I built the UNet from a few basic operations. The convolutional ones are each followed by batch norm and a GELU. <code>Conv</code> is a 3×3 convolution (stride 1, padding 1) that changes only the channel count. <code>DownConv</code> is a 3×3 convolution with stride 2 that halves the resolution. <code>UpConv</code> is a 4×4 transposed convolution with stride 2 that doubles it. <code>Flatten</code> is average pooling over the whole 7×7 map, which turns it into 1×1, and <code>Unflatten</code> is a 7×7 transposed convolution that expands it back. The output sizes follow</p>
@@ -425,7 +425,7 @@
     </div>
  
     <div class="title">
-        <img src="../images/8_transparent_images/part_b_2.png" class="title_text_2">
+        <img src="../images/8_transparent_images/part_b_2.png" class="title_text_2 crop-left-line">
     </div>
     <div class="text">
         <p><strong>2.1–2.2 Time-Conditioned Flow Matching UNet.</strong> One-step denoising can't generate varied digits, so I switched to flow matching, where the UNet predicts the velocity along a path from noise to a clean digit and generation iterates. For a clean digit \(x_1\), noise \(x_0 \sim \mathcal{N}(0, I)\), and a time \(t\) drawn uniformly from \([0, 1]\) for each image,</p>

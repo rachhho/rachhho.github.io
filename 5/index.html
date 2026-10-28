@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project 3 — Fun With Flow Models</title>
+    <link rel="stylesheet" href="../style.css">
+    <!-- renders the \( ... \) and \[ ... \] formulas below; needs an internet connection to load -->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* Optional inline styling to help contain large MathJax matrices */
+        .math-container {
+            overflow-x: auto;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="title">
+        <img src="../im_p4/proj_4_header.png" class="title_text crop-left-line">
+    </div>
+ 
+    <div class="title">
+        <img src="../im_p4/part_a.png" class="title_text crop-left-line">
+    </div>
+ 
+   
+    <div class="text">
+        <p><strong>1.A.1 Shoot the Images</strong> </p>
+        <p>These are my image sets. For these, I made sure to keep the phone in the same place and tried to just rotate the camera around the same point so there wasn't any camera translation when taking the images.</p>
+    </div>
+    <div class="gallery">
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano1_1.jpeg" class="image_compact" alt="Euler t=0.5">
+            <figcaption>Gateway Courtyard</figcaption>
+        </figure>
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano1_2.jpeg" class="image_compact" alt="Euler t=0.6">
+            <figcaption>Gateway Courtyard</figcaption>
+        </figure>
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano1_3.jpeg" class="image_compact" alt="Euler t=0.7">
+            <figcaption>Gateway Courtyard</figcaption>
+        </figure>
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano1_4.jpeg" class="image_compact" alt="Euler t=0.8">
+            <figcaption>Gateway Courtyard</figcaption>
+        </figure>
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano1_5.jpeg" class="image_compact" alt="Euler t=0.9">
+            <figcaption>Gateway Courtyard</figcaption>
+        </figure>
+    </div>
+    <div class="gallery">
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano3_1.jpeg" class="image_compact" alt="Euler t=0.5">
+            <figcaption>Hilgard Hall</figcaption>
+        </figure>
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano3_2.jpeg" class="image_compact" alt="Euler t=0.6">
+            <figcaption>Hilgard Hall</figcaption>
+        </figure>
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano3_3.jpeg" class="image_compact" alt="Euler t=0.7">
+            <figcaption>Hilgard Hall</figcaption>
+        </figure>
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano3_4.jpeg" class="image_compact" alt="Euler t=0.8">
+            <figcaption>Hilgard Hall</figcaption>
+        </figure>
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano3_5.jpeg" class="image_compact" alt="Euler t=0.9">
+            <figcaption>Hilgard Hall</figcaption>
+        </figure>
+    </div>
+
+    <div class="gallery">
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano4_1.jpeg" class="image_compact" alt="Euler t=0.5">
+            <figcaption>Wickson Loop and Wellman Hall</figcaption>
+        </figure>
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano4_2.jpeg" class="image_compact" alt="Euler t=0.6">
+            <figcaption>Wickson Loop and Wellman Hall</figcaption>
+        </figure>
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano4_3.jpeg" class="image_compact" alt="Euler t=0.7">
+            <figcaption>Wickson Loop and Wellman Hall</figcaption>
+        </figure>
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano4_4.jpeg" class="image_compact" alt="Euler t=0.8">
+            <figcaption>Wickson Loop and Wellman Hall</figcaption>
+        </figure>
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano4_5.jpeg" class="image_compact" alt="Euler t=0.9">
+            <figcaption>Wickson Loop and Wellman Hall</figcaption>
+        </figure>
+    </div>
+
+    <div class="text">
+        <p><strong>1.A.2 Compute Homographies</strong> </p>
+        <p>These are my correspondences and the resulting systems of equations solved to find the Homography matrix \(H\). We solve the system \(Ah = b\) to recover the 8 unknown parameters of the homography.</p>
+    </div>
+
+    <div class="gallery">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part1/correspondences1.png" class="image_wide" alt="original and noisy interpolations">
+            <figcaption>correspondences for Gateway Courtyard</figcaption>
+        </figure>
+        
+        <div class="text">
+            <p><strong>Image Set 1 Matrices (pano1_1 to pano1_2):</strong></p>
+            <div class="math-container">
+            \[
+            A = \begin{bmatrix}
+            2081.62 & 810.24 & 1 & 0 & 0 & 0 & -1964676.31 & -764718.55 \\
+            0 & 0 & 0 & 2081.62 & 810.24 & 1 & -1571532.88 & -611693.81 \\
+            3735.33 & 943.82 & 1 & 0 & 0 & 0 & -10098422.56 & -2551612.17 \\
+            0 & 0 & 0 & 3735.33 & 943.82 & 1 & -3852416.85 & -973406.85 \\
+            3753.76 & 2316.55 & 1 & 0 & 0 & 0 & -10182819.50 & -6284092.06 \\
+            0 & 0 & 0 & 3753.76 & 2316.55 & 1 & -8903248.14 & -5494434.12 \\
+            2132.29 & 2390.25 & 1 & 0 & 0 & 0 & -2081256.65 & -2333044.35 \\
+            0 & 0 & 0 & 2132.29 & 2390.25 & 1 & -5253852.23 & -5889456.37
+            \end{bmatrix}
+            \]
+            </div>
+            
+            <div class="math-container">
+            \[
+            b = \begin{bmatrix} 943.82 \\ 754.96 \\ 2703.49 \\ 1031.35 \\ 2712.70 \\ 2371.82 \\ 976.07 \\ 2463.95 \end{bmatrix}
+            \quad \Rightarrow \quad
+            H = \begin{bmatrix} 
+            1.43 & -0.03 & -1866.94 \\ 
+            0.17 & 1.23 & -480.72 \\ 
+            0 & 0 & 1 
+            \end{bmatrix}
+            \]
+            </div>
+        </div>
+
+        <figure class="image-figure">
+            <img src="../im_p4/output_part1/correspondences2.png" class="image_wide" alt="original and noisy interpolations">
+            <figcaption>correspondences for Wickson Loop and Wellman Hall</figcaption>
+        </figure>
+        
+        <div class="text">
+            <p><strong>Image Set 4 Matrices (pano4_1 to pano4_2):</strong></p>
+            <div class="math-container">
+            \[
+            A = \begin{bmatrix}
+            826.13 & 357.07 & 1 & 0 & 0 & 0 & -490789.18 & -212130.87 \\
+            0 & 0 & 0 & 826.13 & 357.07 & 1 & -284074.90 & -122783.99 \\
+            867.42 & 352.95 & 1 & 0 & 0 & 0 & -549702.48 & -223668.18 \\
+            0 & 0 & 0 & 867.42 & 352.95 & 1 & -295407.76 & -120198.32 \\
+            877.33 & 431.40 & 1 & 0 & 0 & 0 & -557431.45 & -274096.99 \\
+            0 & 0 & 0 & 877.33 & 431.40 & 1 & -365437.19 & -179690.67 \\
+            834.39 & 433.05 & 1 & 0 & 0 & 0 & -497073.23 & -257980.89 \\
+            0 & 0 & 0 & 834.39 & 433.05 & 1 & -347550.49 & -180378.62
+            \end{bmatrix}
+            \]
+            </div>
+            
+            <div class="math-container">
+            \[
+            b = \begin{bmatrix} 594.08 \\ 343.86 \\ 633.72 \\ 340.56 \\ 635.37 \\ 416.53 \\ 595.73 \\ 416.53 \end{bmatrix}
+            \quad \Rightarrow \quad
+            H = \begin{bmatrix} 
+            0.78 & 0.20 & -136.30 \\ 
+            -0.06 & 1.12 & -15.64 \\ 
+            0 & 0 & 1 
+            \end{bmatrix}
+            \]
+            </div>
+        </div>
+    </div>
+
+    <div class="text">
+        <p><strong>1.A.3 Warp the Images</strong></p>
+        <p>To warp the images, we project the original image coordinates using our computed Homography matrix \(H\). Rather than using forward mapping (which causes holes and tears in the output image as source pixels diverge), I used an inverse mapping. In inverse mapping, we generate a grid for the target bounding box and map every target pixel back to the source image to sample its color. Essentially, we are ensuring that every pixel in the output pulls from a pixel in the source image, even if there are times where a source pixel is used more than once.</p>
+        <p>I implemented two interpolation methods to sample these source colors:</p>
+        <ul>
+            <li><strong>Nearest Neighbor Interpolation:</strong> This method takes the calculated floating-point source coordinate and rounds it to the nearest integer pixel. It is very fast to compute, but can result in jagged, aliased edges and visible pixelation. In my comparisons, I noticed that points in the image where there were supposed to be more subtle color changes ended up being a lot stronger. This is because there is no averaging in compression or stretching, so transitions are less smooth.</li>
+            <li><strong>Bilinear Interpolation:</strong> This method looks at the 4 closest source pixels surrounding the exact floating-point coordinate and calculates a weighted average based on the coordinate's exact fractional distance to each pixel. While it takes more computation, it produces significantly smoother, higher-quality images by eliminating aliasing artifacts. In my own images, this produced color transitions that were much smoother compared to the nearest neighbor interpolation method.</li>
+        </ul>
+        <p>Below are my rectilinear transformations.</p>
+    </div>
+   
+    <div class="gallery">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part1/rectilinear_1_cor.png" class="image_large" alt="original and noisy interpolations">
+            <figcaption>correspondences for rectilinear image 1</figcaption>
+        </figure>
+        
+        <figure class="image-figure">
+            <img src="../im_p4/output_part1/rectilinear_1.png" class="image_wide" alt="original and noisy interpolations">
+            <figcaption>rectilinear interpolations for image 1</figcaption>
+        </figure>
+    </div>
+
+    <div class="gallery">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part1/rectilinear_2_cor.png" class="image_large" alt="original and noisy interpolations">
+            <figcaption>correspondences for rectilinear image 2</figcaption>
+        </figure>
+        
+        <figure class="image-figure">
+            <img src="../im_p4/output_part1/rectilinear_2.png" class="image_wide" alt="original and noisy interpolations">
+            <figcaption>rectilinear interpolations for image 2</figcaption>
+        </figure>
+    </div>
+
+    <div class="gallery">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part1/rect_4_cor.png" class="image_large" alt="original and noisy interpolations">
+            <figcaption>correspondences for rectilinear image 3</figcaption>
+        </figure>
+        
+        <figure class="image-figure">
+            <img src="../im_p4/output_part1/rect_4.png" class="image_wide" alt="original and noisy interpolations">
+            <figcaption>rectilinear interpolations for image 3</figcaption>
+        </figure>
+    </div>
+
+    <div class="text">
+        <p><strong>1.A.4 Blend the Images into a Mosaic</strong> </p>
+        <p>To merge the aligned images into a seamless mosaic, overwriting one image with another leads to harsh, visible seams. I instead used an alpha mask and weighted feathering to make this a smoother transition.</p>
+        <p>Though I only used two images for these examples, this procedure can be done to create wider panoramas.</p>
+        <ol>
+            <li>Calculate the bounding box of the newly warped image to determine where it lands in space.</li>
+            <li>Create a new global canvas large enough to hold both the base mosaic and the new warped image, shifting coordinates if the new image projects into negative space (up or left).</li>
+            <li>Use a Distance Transform (specifically <code>scipy.ndimage.distance_transform_edt</code>) on the alpha mask of each image. This computes how far each valid pixel is from the edge of its respective image.</li>
+            <li>Blend the overlapping regions by assigning higher weights to pixels furthest from their edges, smoothly transitioning opacity (alpha) linearly, with the value of 0 at the edge.</li>
+        </ol>
+
+        
+            <p>Initially, I tried computing the Homography matrix using only 4 point correspondences. Because a Homography has 8 degrees of freedom and each point provides 2 equations (\(x\) and \(y\)), 4 points give exactly 8 equations. Mathematically, this creates an exactly determined system.</p>
+            <p>This ended up being not very accurate since it was relying on just 4 points. This happens because human clicking is never perfectly accurate, so small errors force the exact mathematical solver to warp the entire image to force those imperfect points to align.</p>
+            <p>To fix this, I used 8 correspondences. By providing more points, the system becomes overdetermined. Since there is no longer a "perfect" solution that satisfies every single slightly-inaccurate click, I chose to solve using least squares. This minimizes the total sum of squared errors across all points that averages out the small human clicking errors.</p>
+      
+        
+            <p>When stitching multiple images together, the choice of the reference frame (the base image we warp everything else onto) drastically changes the calculated Homography matrices and the shape of the final mosaic. In my implementation, I  chose to warp the left and right images onto the center image's coordinate space.</p>
+            <p>If I had instead chosen the far-left image as the reference frame, the right image would have to undergo a massive perspective shift to project onto a plane that is facing heavily away from its original view. Mathematically, as the angle between the viewing planes increases, the projected coordinates stretch out toward infinity. This causes extreme stretching, severe resolution loss (pixelation), and aggressive perspective distortion on the far side of the mosaic. By centering the reference plane, we minimize the maximum projection angle across the entire panorama, keeping the geometric distortion balanced.</p>
+     
+        <div class="gallery">
+            <figure class="image-figure">
+                <img src="../im_p4/output_part1/pano_1_4.png" class="image_mid" alt="original and noisy interpolations">
+                <figcaption>Gateway Courtyard with 4 Correspondences</figcaption>
+            </figure>
+            <figure class="image-figure">
+                <img src="../im_p4/output_part1/pano_3_4cor.png" class="image_mid" alt="original and noisy interpolations">
+                <figcaption>Hilgard Hall with 4 Correspondences</figcaption>
+            </figure>
+            
+            
+        </div>
+
+        <p>These are my resulting blended mosaics after I implemented all of these changes.</p>
+    </div>
+
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano1_1.jpeg" class="image" alt="sharp pig blurred">
+            <figcaption>Gateway Courtyard - Left</figcaption>
+        </figure>
+       
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano1_3.jpeg" class="image" alt="pig stronger sharpen">
+            <figcaption>Gateway Courtyard - Right</figcaption>
+        </figure>
+        
+    </div>
+    <div class="gallery">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part1/pano_1_2.png" class="image_wide" alt="original and noisy interpolations">
+            <figcaption>Gateway Courtyard - Mosaic</figcaption>
+        </figure>
+    </div>
+
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano1_1.jpeg" class="image" alt="sharp pig blurred">
+            <figcaption>Gateway Courtyard - Left</figcaption>
+        </figure>
+       
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano1_3.jpeg" class="image" alt="pig stronger sharpen">
+            <figcaption>Gateway Courtyard - Center</figcaption>
+        </figure>
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano1_5.jpeg" class="image" alt="pig stronger sharpen">
+            <figcaption>Gateway Courtyard - Right</figcaption>
+        </figure>
+        
+    </div>
+    <div class="gallery">
+        
+        <figure class="image-figure">
+            <img src="../im_p4/output_part1/pano_1_5.png" class="image_wide" alt="original and noisy interpolations">
+            <figcaption>Gateway Courtyard - Mosaic With 3 Images</figcaption>
+        </figure>
+    </div>
+
+    <div class="center">
+        
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano3_3.jpeg" class="image" alt="pig stronger sharpen">
+            <figcaption>Hilgard Hall - Left</figcaption>
+        </figure>
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano3_5.jpeg" class="image" alt="pig stronger sharpen">
+            <figcaption>Hilgard Hall - Right</figcaption>
+        </figure>
+    </div>
+    <div class="gallery">
+        
+        <figure class="image-figure">
+            <img src="../im_p4/output_part1/pano_3_2.png" class="image_wide" alt="original and noisy interpolations">
+            <figcaption>Hilgard Hall - Mosaic</figcaption>
+        </figure>
+    </div>
+
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano3_1.jpeg" class="image" alt="pig stronger sharpen">
+            <figcaption>Hilgard Hall - Left</figcaption>
+        </figure>
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano3_3.jpeg" class="image" alt="pig stronger sharpen">
+            <figcaption>Hilgard Hall - Center</figcaption>
+        </figure>
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano3_5.jpeg" class="image" alt="pig stronger sharpen">
+            <figcaption>Hilgard Hall - Right</figcaption>
+        </figure>
+    </div>
+    <div class="gallery">
+        
+        <figure class="image-figure">
+            <img src="../im_p4/output_part1/pano_3_5.png" class="image_wide" alt="original and noisy interpolations">
+            <figcaption>Hilgard Hall - Mosaic With 3 Images</figcaption>
+        </figure>
+    </div>
+
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano4_1.jpeg" class="image" alt="sharp pig blurred">
+            <figcaption>Wickson Loop and Wellman Hall - Left</figcaption>
+        </figure>
+        
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano4_3.jpeg" class="image" alt="pig stronger sharpen">
+            <figcaption>Wickson Loop and Wellman Hall - Right</figcaption>
+        </figure>
+       
+    </div>
+    <div class="gallery">
+        
+        <figure class="image-figure">
+            <img src="../im_p4/output_part1/pano_4_2.png" class="image_wide" alt="original and noisy interpolations">
+            <figcaption>Wickson Loop and Wellman Hall - Mosaic</figcaption>
+        </figure>
+    </div>
+
+    
+
+
+ 
+    <div class="center">
+        <a href="../index.html" class="return">return home!</a>
+    </div>
+</body>
+</html>

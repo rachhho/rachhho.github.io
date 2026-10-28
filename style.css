@@ -219,9 +219,12 @@ figure.stack-cell figcaption {
 }
 .image-small {
     width: 150px;
-
-
 }
+
+.crop-left-line {
+    clip-path: inset(0 0 0 2px);
+}
+
 .project {
     border-width: 2px;
     border-color: #4a2c6d;
