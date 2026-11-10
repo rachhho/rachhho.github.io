@@ -1,10 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Project 3 — Fun With Flow Models</title>
+    <title>Project 4 - Auto-stitching Photo Mosaics</title>
     <link rel="stylesheet" href="../style.css">
-    <!-- renders the \( ... \) and \[ ... \] formulas below; needs an internet connection to load -->
+    
+    <!-- Configure MathJax to recognize single $ for inline math -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            }
+        };
+    </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
     <style>
         /* Optional inline styling to help contain large MathJax matrices */
         .math-container {
@@ -362,10 +373,214 @@
         </figure>
     </div>
 
+
+
+
+
+
+
+
+    <div class="title">
+        <img src="../im_p4/part_b.png" class="title_text crop-left-line">
+    </div>
+
+    <div class="text">
+        <p><strong>1.B.1 Harris Corner Detection & Adaptive Non-Maximal Suppression (ANMS)</strong></p>
+        <p>
+            <strong>Harris Interest Point Detection:</strong> The Harris corner detector identifies interest points by searching for pixels with large intensity gradients in multiple directions. It calculates the structure tensor matrix $M$ using local image derivatives ($I_x$ and $I_y$) smoothed by a Gaussian window. The corner response score $h(x, y)$ is computed across the image to highlight sharp corners. While this detects thousands of valid corners, raw Harris responses tend to heavily cluster in dense, high-contrast areas (such as tree foliage or complex textures), leaving simpler regions sparse.
+        </p>
+        <p>
+            <strong>Adaptive Non-Maximal Suppression (ANMS):</strong> To ensure a uniform spatial distribution of interest points across the entire image, we implement ANMS. For every corner $i$, we find the minimum distance $r_i$ to another corner $j$ that has a significantly stronger corner response ($h_j > c_{\text{robust}} \cdot h_i$, where $c_{\text{robust}} = 0.9$):
+        </p>
+        <p style="text-align: center;">
+            $r_i = \min_j ||x_i - x_j||_2 \quad \text{subject to} \quad h_j > c_{\text{robust}} \cdot h_i$
+        </p>
+        <p>
+            Corners with large suppression radii $r_i$ represent strong local maxima over a wide spatial region. We sort all keypoints in descending order by radius $r_i$ and select the top $N = 500$ points, yielding well-distributed, high-scoring feature locations.
+        </p>
+    </div>
+    <div class="text">
+        <p><strong>images that I used</strong></p>
+    </div>
     
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano2_1.jpeg" class="image_mid" alt="Hilgard Hall - Left">
+            <figcaption>Hilgard Hall - Left</figcaption>
+        </figure>
+        <figure class="image-figure">
+            <img src="../im_p4/input_part1/pano2_2.jpeg" class="image_mid" alt="Hilgard Hall - Right">
+            <figcaption>Hilgard Hall - Right</figcaption>
+        </figure>
+    </div>
 
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part2/harris_corners_pano2_1.png" class="image_wide" alt="harris corners">
+            <figcaption>All Detected Harris Corners</figcaption>
+        </figure>
+        
+    </div>
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part2/anms_pano2_1.png" class="image_wide" alt="anms">
+            <figcaption>Top 500 Corners after ANMS</figcaption>
+        </figure>
+    </div>
 
- 
+    <div class="text">
+        <p><strong>1.B.2 Feature Descriptor Extraction</strong></p>
+        <p>
+            To match interest points across different images, we extract a localized feature descriptor around each ANMS keypoint:
+        </p>
+        <ul>
+            <li><strong>Anti-Aliasing Blur:</strong> We first apply a mild Gaussian blur ($\sigma = 1.0$) to the image to prevent aliasing during spatial downsampling.</li>
+            <li><strong>Window Sampling & Downsampling:</strong> Around each keypoint, we extract a large $40 \times 40$ pixel bounding window. We sample every 5th pixel to downsample the window into a compact $8 \times 8$ patch (64 dimensions total). Sampling from a large $40 \times 40$ area gives the descriptor a larger context while maintaining a small vector size.</li>
+            <li><strong>Bias and Gain Normalization:</strong> Each $8 \times 8$ patch vector $P$ is normalized to zero mean ($\mu = 0$) and unit variance ($\sigma = 1$) via $P_{\text{norm}} = \frac{P - \mu}{\sigma + \epsilon}$. This makes the feature descriptor invariant to linear illumination changes, brightness shifts, and contrast differences between photos.</li>
+        </ul>
+    </div>
+
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part2/feature_descriptors2_1.png" class="image_mid" alt="feature descriptors for image 1">
+            <figcaption>Sample Normalized 8x8 Feature Descriptors (Image 1)</figcaption>
+        </figure>
+        <figure class="image-figure">
+            <img src="../im_p4/output_part2/feature_descriptors2_2.png" class="image_mid" alt="feature descriptors for image 2">
+            <figcaption>Sample Normalized 8x8 Feature Descriptors (Image 2)</figcaption>
+        </figure>
+    </div>
+
+    <div class="text">
+        <p><strong>1.B.3 Feature Matching & Lowe's Ratio Test</strong></p>
+        <p>
+            We match features between Image 1 and Image 2 by calculating the pairwise Euclidean distance between all 64-dimensional descriptor vectors using <code>scipy.spatial.distance.cdist</code>.
+        </p>
+        <p>
+            Rather than setting a global distance threshold, we use <strong>Lowe's Ratio Test</strong>. For a descriptor in Image 1, we identify its 1st nearest neighbor (distance $d_1$) and 2nd nearest neighbor (distance $d_2$) in Image 2. The match was only considered valid when $\frac{d_1}{d_2} \lt \text{threshold}$. A lower threshold meant that the relative difference between the two distances had to be much larger, which excluded more candidates, while a higher threshold would allow for more repetitive features but could also result in too many inaccurate points being accepted.
+        </p>
+        
+        <p>Distinctive architectural corners (like window frames or door edges) produce a true match where $d_1 \ll d_2$, resulting in a small ratio. In contrast, ambiguous or repetitive patterns (such as tree leaves, grass, or clouds) match almost equally well to multiple patches in Image 2 ($d_1 \approx d_2$). Their ratio approaches $1.0$, allowing the test to discard false matches.</p>
+    </div>
+
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part2/feature_match_pano_2_12.png" class="image_wide" alt="feature match">
+            <figcaption>Feature Matches after Lowe's Ratio Test</figcaption>
+        </figure>
+    </div>
+
+    <div class="text">
+        <p><strong>1.B.4 RANSAC for Robust Homography</strong></p>
+        
+        <p>
+            Even after Lowe's ratio test, a small fraction of incorrect feature matches (outliers) can survive. Because standard least-squares homography is extremely sensitive to outliers, we implement 4-Point RANSAC:
+        </p>
+        <ol>
+            <li><strong>Random Sampling:</strong> Select 4 matched point pairs at random from the candidate matches.</li>
+            <li><strong>Candidate Homography:</strong> Compute the $3 \times 3$ Homography matrix $H$ mapping Image 1 points to Image 2 using Direct Linear Transformation (DLT).</li>
+            <li><strong>Reprojection Error & Inlier Counting:</strong> Transform all matched points from Image 1 using $H$ ($\hat{p}_2 = H p_1$) and calculate the Euclidean distance error to their actual location $p_2$ in Image 2:
+                $$\text{Error} = \|\hat{p}_2 - p_2\|_2 = \sqrt{(\hat{x}_2 - x_2)^2 + (\hat{y}_2 - y_2)^2}$$
+                Points with a reprojection error below a distance threshold (e.g., $2.0$ pixels) are counted as <em>inliers</em>.
+            </li>
+            <li><strong>Iteration & Refinement:</strong> Repeat this process for $N = 3,000$ iterations. We select the candidate homography matrix that produced the largest set of consensus inliers. Finally, we re-compute $H$ using <em>all</em> inliers in the best set via least-squares to obtain the optimal transformation.</li>
+        </ol>
+    </div>
+
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part2/ransac_2_12_points.png" class="image_wide" alt="RANSAC inlier points">
+            <figcaption>RANSAC Inliers Overlaid on Side-by-Side Images</figcaption>
+        </figure>
+    </div>
+
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part2/ransac_2_12.png" class="image_wide" alt="Automatic RANSAC Mosaic">
+            <figcaption>Final Automatically Stitched & Blended Panorama Mosaic</figcaption>
+        </figure>
+    </div>
+    <div class="text">
+        <p>Below, the homography is not as good. There is intense warping due to the larger difference in angle when the pictures were taken.</p>
+    </div>
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part2/ransac_3_25_points.png" class="image_wide" alt="RANSAC inlier points">
+            <figcaption>RANSAC Inliers Overlaid on Side-by-Side Images</figcaption>
+        </figure>
+    </div>
+
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part2/ransac_3_25.png" class="image_wide" alt="Automatic RANSAC Mosaic">
+            <figcaption>Final Automatically Stitched & Blended Panorama Mosaic</figcaption>
+        </figure>
+    </div>
+
+    <div class="text">
+        <p>This homography looks slightly better since the images have less of an angle, but still not great since features like tree leaves don't match up perfectly. As seen in the RANSAC points images, none of the points selected for the homography are from the large tree that has the most inconsistency in the final image.</p>
+    </div>
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part2/ransac_3_35_points.png" class="image_wide" alt="RANSAC inlier points">
+            <figcaption>RANSAC Inliers Overlaid on Side-by-Side Images</figcaption>
+        </figure>
+    </div>
+
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part2/ransac_3_35.png" class="image_wide" alt="Automatic RANSAC Mosaic">
+            <figcaption>Final Automatically Stitched & Blended Panorama Mosaic</figcaption>
+        </figure>
+    </div>
+
+    <div class="text">
+        <p>This homography is slightly better due to the homography finding more similarities between the two trees. Because it is taken farther away, the angle the tree is viewed at between images is less, resulting in strong feature matches.</p>
+    </div>
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part2/ransac_4_14_points.png" class="image_wide" alt="RANSAC inlier points">
+            <figcaption>RANSAC Inliers Overlaid on Side-by-Side Images</figcaption>
+        </figure>
+    </div>
+
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part2/ransac_4_14.png" class="image_wide" alt="Automatic RANSAC Mosaic">
+            <figcaption>Final Automatically Stitched & Blended Panorama Mosaic</figcaption>
+        </figure>
+    </div>
+
+    <div class="text">
+        <p>Overall, images that are of non-organic subjects tend to fare better.</p>
+    </div>
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part2/ransac_5_13_points.png" class="image_wide" alt="RANSAC inlier points">
+            <figcaption>RANSAC Inliers Overlaid on Side-by-Side Images</figcaption>
+        </figure>
+    </div>
+
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part2/ransac_5_13.png" class="image_wide" alt="Automatic RANSAC Mosaic">
+            <figcaption>Final Automatically Stitched & Blended Panorama Mosaic</figcaption>
+        </figure>
+    </div>
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part2/ransac_6_12_real_points.png" class="image_wide" alt="RANSAC inlier points">
+            <figcaption>RANSAC Inliers Overlaid on Side-by-Side Images</figcaption>
+        </figure>
+    </div>
+
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part2/ransac_6_12_real.png" class="image_wide" alt="Automatic RANSAC Mosaic">
+            <figcaption>Final Automatically Stitched & Blended Panorama Mosaic</figcaption>
+        </figure>
+    </div>
+
     <div class="center">
         <a href="../index.html" class="return">return home!</a>
     </div>
