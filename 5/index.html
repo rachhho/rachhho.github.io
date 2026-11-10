@@ -452,6 +452,17 @@
     </div>
 
     <div class="text">
+        <p>Using the valid coordinates given from the feature descriptor, we can look at those patches in the photo in color. Edges in the color image reflect edges in the feature descriptor because these descriptors are just patches of the original image that have low pass filters applied and are then downsampled.</p>
+    </div>
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part2/extracted_features.png" class="image_tall" alt="feature descriptors for image 2">
+            <figcaption>Extracted features using valid coordinates from feature descriptors</figcaption>
+        </figure>
+    </div>
+
+    
+    <div class="text">
         <p><strong>1.B.3 Feature Matching & Lowe's Ratio Test</strong></p>
         <p>
             We match features between Image 1 and Image 2 by calculating the pairwise Euclidean distance between all 64-dimensional descriptor vectors using <code>scipy.spatial.distance.cdist</code>.
@@ -469,6 +480,16 @@
             <figcaption>Feature Matches after Lowe's Ratio Test</figcaption>
         </figure>
     </div>
+    <div class="text">
+        <p>Finding these feature matches is possible even when the angle changes because around small patches like these, they are still roughly planar. The downsampling after applying a low pass filter as well as adjusting for lighting differences removes the slight geometric and shadow differences.</p>
+    </div>
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part2/match_image_compare.png" class="image_mid" alt="feature match">
+            <figcaption>Feature Matches and Feature Descriptors</figcaption>
+        </figure>
+    </div>
+
 
     <div class="text">
         <p><strong>1.B.4 RANSAC for Robust Homography</strong></p>
