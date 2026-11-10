@@ -501,6 +501,16 @@
         </figure>
     </div>
     <div class="text">
+        <p>When compared to the manual homography, the automatic version does a very good job of matching key features that might not be as noticeable to the human eye. Specifically, key features on the tree that might be harder to match just by looking are able to be more easily identified with the automatic. In addition, the least squares performance on inliers is far more points than the 8 selected for the manual, which is already difficult to keep track of.</p>
+    </div>
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part2/pano_2_12_manual.png" class="image_wide" alt="Automatic RANSAC Mosaic">
+            <figcaption>Manual Panorama Mosaic</figcaption>
+        </figure>
+    </div>
+
+    <div class="text">
         <p>Below, the homography is not as good. There is intense warping due to the larger difference in angle when the pictures were taken.</p>
     </div>
     <div class="center">
@@ -533,6 +543,16 @@
             <figcaption>Final Automatically Stitched & Blended Panorama Mosaic</figcaption>
         </figure>
     </div>
+    <div class="text">
+        <p>Although the foliage at the top is not quite accurate, it is still much better than manually placing points for the same images.</p>
+    </div>
+    <div class="center">
+        <figure class="image-figure">
+            <img src="../im_p4/output_part2/pano_3_35_manual.png" class="image_wide" alt="Automatic RANSAC Mosaic">
+            <figcaption>Manual Panorama Mosaic</figcaption>
+        </figure>
+    </div>
+
 
     <div class="text">
         <p>This homography is slightly better due to the homography finding more similarities between the two trees. Because it is taken farther away, the angle the tree is viewed at between images is less, resulting in strong feature matches.</p>
